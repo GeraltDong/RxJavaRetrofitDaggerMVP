@@ -15,11 +15,13 @@ import androidx.lifecycle.LifecycleOwner;
 import com.wangdong.rxjavaretrofitdaggermvp.application.MyApplication;
 import com.wangdong.rxjavaretrofitdaggermvp.mvp.IView;
 
+import java.util.Objects;
+
 import butterknife.ButterKnife;
 
 /**
  * @author wangdong
- * @descripiton
+ * @descripiton baseActivity
  * @date 2020/4/16 17:46
  */
 public abstract class BaseActivity extends AppCompatActivity implements IView, LifecycleOwner {
@@ -38,34 +40,39 @@ public abstract class BaseActivity extends AppCompatActivity implements IView, L
         ButterKnife.bind(this);
         setContentView(getLayoutId());
         if (isHideAppTitle) {
-            getSupportActionBar().hide();
+            Objects.requireNonNull(getSupportActionBar()).hide();
         }
         this.onInitView();
         this.onRequestData();
         MyApplication.getInstance().addActivity(this);
     }
 
+    /**
+     * 布局id
+     * @return id
+     */
     protected abstract int getLayoutId();
 
-    /*
+    /**
      * 初始化变量
-     **/
+     */
     protected abstract void onInitVariable();
 
-    /*
+    /**
      * 初始化布局
-     **/
+     */
     protected abstract void onInitView();
 
-    /*
+    /**
      * 请求数据
-     **/
+     */
     protected abstract void onRequestData();
 
 
-    /*
+    /**
      * 设置横竖屏切换
-     * */
+     * @param screenRoate
+     */
     @SuppressLint("SourceLockedOrientationActivity")
     protected void setScreenRote(boolean screenRoate) {
         if (screenRoate) {
@@ -75,18 +82,25 @@ public abstract class BaseActivity extends AppCompatActivity implements IView, L
         }
     }
 
-    /*
+
+    /**
      * 页面跳转
-     * */
+     * @param clz
+     */
+    @Override
     public void startActivity(Class<?> clz) {
         Intent intent = new Intent();
         intent.setClass(this, clz);
         startActivity(intent);
     }
 
-    /*
+
+    /**
      * 携带参数的页面跳转
-     * */
+     * @param clz
+     * @param bundle
+     */
+    @Override
     public void startActivity(Class<?> clz, Bundle bundle) {
         Intent intent = new Intent();
         intent.setClass(this, clz);
@@ -96,9 +110,14 @@ public abstract class BaseActivity extends AppCompatActivity implements IView, L
         startActivity(intent);
     }
 
-    /*
-     * 含有Bundle通过Class打开编辑界面
-     * */
+
+    /**
+     * 带返回值的跳转
+     * @param clz
+     * @param bundle
+     * @param requestCode
+     */
+    @Override
     public void startActivityForResult(Class<?> clz, Bundle bundle, int requestCode) {
         Intent intent = new Intent();
         intent.setClass(this, clz);
@@ -108,8 +127,14 @@ public abstract class BaseActivity extends AppCompatActivity implements IView, L
         startActivityForResult(intent, requestCode);
     }
 
+    /**
+     * 显示toast
+     * @param msg
+     * @param duration
+     */
+    @Override
     public void showToast(String msg, int duration) {
-        Toast.makeText(this, msg, duration);
+        Toast.makeText(this, msg, duration).show();
     }
 
     @Override

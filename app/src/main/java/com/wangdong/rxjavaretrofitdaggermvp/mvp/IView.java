@@ -1,11 +1,42 @@
 package com.wangdong.rxjavaretrofitdaggermvp.mvp;
 
+import android.os.Bundle;
+
 /**
  * @author wangdong
  * @descripiton
  * @date 2020/4/16 15:56
  */
 public interface IView {
+
+    /**
+     * 页面跳转
+     * @param clz
+     */
+    void startActivity(Class<?> clz);
+
+    /**
+     * 携带参数的页面跳转
+     * @param clz
+     * @param bundle
+     */
+    void startActivity(Class<?> clz, Bundle bundle);
+
+    /**
+     * 带返回值的跳转
+     * @param clz
+     * @param bundle
+     * @param requestCode
+     */
+    void startActivityForResult(Class<?> clz, Bundle bundle, int requestCode);
+
+    /**
+     * 显示toast
+     * @param msg
+     * @param duration
+     */
+    void showToast(String msg, int duration);
+
     /**
      * 显示加载框
      */
