@@ -8,5 +8,5 @@ import com.wangdong.rxjavaretrofitdaggermvp.mvp.IModel;
  * @date 2020/4/16 16:32
  */
 public abstract class BaseModel implements IModel {
-    protected abstract void InitAPI();
+    protected abstract void initAPI();
 }

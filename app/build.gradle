@@ -13,11 +13,20 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs{
+        release{
+            storePassword "123456"
+            storeFile file('./key/mvp.jks')
+            keyPassword "123456"
+            keyAlias "mvp"
+        }
+    }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
