@@ -1,32 +1,48 @@
 package com.wangdong.rxjavaretrofitdaggermvp.application;
 
 import android.app.Activity;
+import android.app.AppComponentFactory;
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 import com.orhanobut.logger.AndroidLogAdapter;
-import com.orhanobut.logger.BuildConfig;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
+import com.wangdong.rxjavaretrofitdaggermvp.BuildConfig;
+import com.wangdong.rxjavaretrofitdaggermvp.bean.ApplicationData;
+import com.wangdong.rxjavaretrofitdaggermvp.di.component.DaggerAppComponent;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasAndroidInjector;
 
 /**
  * @author wangdong
  * @descripiton
  * @date 2020/4/16 17:59
  */
-public class MyApplication extends Application {
+public class MyApplication extends Application implements HasAndroidInjector {
+    @Inject
+    DispatchingAndroidInjector<Object> dispatchingAndroidInjector;
     private ArrayList<Activity> activityList = new ArrayList();
     private static MyApplication instance;
+    @Inject
+    public ApplicationData applicationData;
 
     @Override
     public void onCreate() {
         instance = this;
         super.onCreate();
-
+        DaggerAppComponent.builder().application(this).build().inject(this);
+        initLog();
+        Logger.i(applicationData.toString());
     }
 
     public static MyApplication getInstance(){
@@ -36,7 +52,7 @@ public class MyApplication extends Application {
     private void initLog() {
         FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
                 // 每个日志的全局标记。默认PRETTY_LOGGER
-                .tag("LazyStep")
+                .tag(this.getPackageName())
                 .build();
         Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy){
             @Override
@@ -71,5 +87,10 @@ public class MyApplication extends Application {
             System.exit(0);
             android.os.Process.killProcess(android.os.Process.myPid());
         }
+    }
+
+    @Override
+    public AndroidInjector<Object> androidInjector() {
+        return dispatchingAndroidInjector;
     }
 }

@@ -10,12 +10,23 @@ import com.wangdong.rxjavaretrofitdaggermvp.bean.VideoCategory;
 import com.wangdong.rxjavaretrofitdaggermvp.contract.VideoCategoryContract;
 import com.wangdong.rxjavaretrofitdaggermvp.presenter.VideoCategoryPresenter;
 
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasAndroidInjector;
+
 /**
  * @author wangdong
  */
-public class MainActivity extends BaseActivity implements VideoCategoryContract.VideoCategoryView {
+public class MainActivity extends BaseActivity implements HasAndroidInjector,VideoCategoryContract.VideoCategoryView {
+    @Inject
+    DispatchingAndroidInjector<Object> androidInjector;
 
-    private VideoCategoryPresenter videoCategoryPresenter;
+    @Inject
+    public VideoCategoryPresenter videoCategoryPresenter;
+
     private TextView textView;
 
     @Override
@@ -30,7 +41,8 @@ public class MainActivity extends BaseActivity implements VideoCategoryContract.
 
     @Override
     protected void onInitVariable() {
-        videoCategoryPresenter = new VideoCategoryPresenter();
+        //手动注入代码。
+        AndroidInjection.inject(this);
     }
 
     @Override
@@ -87,5 +99,10 @@ public class MainActivity extends BaseActivity implements VideoCategoryContract.
     @Override
     public void onReLoad() {
 
+    }
+
+    @Override
+    public AndroidInjector<Object> androidInjector() {
+        return androidInjector;
     }
 }

@@ -10,12 +10,18 @@ import com.wangdong.rxjavaretrofitdaggermvp.mvp.IModel;
 
 import java.util.HashMap;
 
+import javax.inject.Inject;
+
 /**
  * @author wangdong
  * @descripiton
  * @date 2020/4/17 0:23
  */
 public class VideoCategoryPresenter extends BasePresenter<MainActivity> implements VideoCategoryContract.VideoCategoryPresenter {
+    @Inject
+    public VideoCategoryPresenter() {
+    }
+
     @Override
     public HashMap<String, IModel> getIModelMap() {
         return loadModelMap(new VideoCategoryModel());
