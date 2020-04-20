@@ -10,7 +10,8 @@ import retrofit2.http.GET;
  * @descripiton
  * @date 2020/4/16 17:07
  */
-public interface APIVideoCategory {
+public interface APIService {
+
     @GET("article/list/0/json")
     Observable<VideoCategory> getVideoCategory();
 }
