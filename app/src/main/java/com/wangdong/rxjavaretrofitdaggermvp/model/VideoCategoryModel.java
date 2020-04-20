@@ -8,7 +8,9 @@ import com.wangdong.rxjavaretrofitdaggermvp.Listener.ViewCategoryListener;
 import com.wangdong.rxjavaretrofitdaggermvp.activity.MainActivity;
 import com.wangdong.rxjavaretrofitdaggermvp.base.BaseModel;
 import com.wangdong.rxjavaretrofitdaggermvp.bean.VideoCategory;
-import com.wangdong.rxjavaretrofitdaggermvp.http.APIVideoCategory;
+import com.wangdong.rxjavaretrofitdaggermvp.constant.Constant;
+import com.wangdong.rxjavaretrofitdaggermvp.http.APIService;
+import com.wangdong.rxjavaretrofitdaggermvp.http.APIServiceManager;
 import com.wangdong.rxjavaretrofitdaggermvp.http.HttpRetrofit;
 
 import io.reactivex.Observer;
@@ -23,7 +25,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class VideoCategoryModel extends BaseModel {
 
-    private APIVideoCategory apiVideoCategory;
+    private APIService apiVideoCategory;
 
     public VideoCategoryModel() {
         initAPI();
@@ -31,7 +33,7 @@ public class VideoCategoryModel extends BaseModel {
 
     @Override
     protected void initAPI() {
-        apiVideoCategory = HttpRetrofit.getAPIVideoCategory();
+        apiVideoCategory = APIServiceManager.getAPIService(Constant.BASE_URL);
     }
 
     public void getVideoCategory(MainActivity view, ViewCategoryListener viewCategoryListener){

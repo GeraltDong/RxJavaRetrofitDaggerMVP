@@ -17,20 +17,18 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 public class HttpRetrofit {
     private static volatile Retrofit sRetrofit;
-    private static volatile APIVideoCategory sAPIVideoCategory;
 
-    public static APIVideoCategory getAPIVideoCategory(){
-        if(sAPIVideoCategory == null){
-            synchronized (HttpRetrofit.class){
-                if(sAPIVideoCategory == null){
-                    sAPIVideoCategory = getReRestrofit().create(APIVideoCategory.class);
-                }
-            }
-        }
-        return sAPIVideoCategory;
+    /**
+     * @return okhttpClient.Builder
+     */
+    public static OkHttpClient.Builder getOkHttpClientBuilder() {
+        OkHttpClient.Builder builder = new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS)
+                .addInterceptor(new HttpLoggingInterceptor());
+        return builder;
     }
 
-    public static Retrofit getReRestrofit(){
+
+    public static Retrofit getReRestrofit(String baseUrl){
         if(sRetrofit == null){
             synchronized (HttpRetrofit.class){
                 if(sRetrofit == null){
@@ -38,7 +36,7 @@ public class HttpRetrofit {
                             .addInterceptor(new HttpLoggingInterceptor())
                             .build();
                     sRetrofit = new Retrofit.Builder()
-                            .baseUrl(Constant.BASE_URL)
+                            .baseUrl(baseUrl)
                             .addConverterFactory(GsonConverterFactory.create())
                             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                             .client(okhttpClient)
