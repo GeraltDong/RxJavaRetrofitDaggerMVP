@@ -5,6 +5,7 @@ import androidx.lifecycle.Lifecycle;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 import com.wangdong.rxjavaretrofitdaggermvp.Listener.ViewCategoryListener;
+import com.wangdong.rxjavaretrofitdaggermvp.Observer.DefaultObserver;
 import com.wangdong.rxjavaretrofitdaggermvp.activity.MainActivity;
 import com.wangdong.rxjavaretrofitdaggermvp.base.BaseModel;
 import com.wangdong.rxjavaretrofitdaggermvp.bean.VideoCategory;
@@ -12,11 +13,9 @@ import com.wangdong.rxjavaretrofitdaggermvp.constant.Constant;
 import com.wangdong.rxjavaretrofitdaggermvp.http.APIService;
 import com.wangdong.rxjavaretrofitdaggermvp.http.APIServiceManager;
 import com.wangdong.rxjavaretrofitdaggermvp.http.HttpRetrofit;
+import com.wangdong.rxjavaretrofitdaggermvp.utils.RxThreadUtils;
 
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author wangdong
@@ -38,28 +37,28 @@ public class VideoCategoryModel extends BaseModel {
 
     public void getVideoCategory(MainActivity view, ViewCategoryListener viewCategoryListener){
         apiVideoCategory.getVideoCategory()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxThreadUtils.observableToMain())
                 .as(AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(view, Lifecycle.Event.ON_DESTROY)))
-                .subscribe(new Observer<VideoCategory>() {
+                .subscribe(new DefaultObserver<VideoCategory>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(VideoCategory videoCategory) {
-                        viewCategoryListener.success(videoCategory);
-                    }
-
-                    @Override
                     public void onError(Throwable e) {
+                        super.onError(e);
                         viewCategoryListener.failure(e.getMessage());
                     }
 
                     @Override
                     public void onComplete() {
 
+                    }
+
+                    @Override
+                    public void onSuccess(VideoCategory response) {
+                        viewCategoryListener.success(response);
                     }
                 });
 
